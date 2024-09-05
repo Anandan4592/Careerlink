@@ -1,0 +1,124 @@
+{% extends 'careernav.html' %}
+{% block content %}
+{% load static %}
+
+<style>
+    /* Animation for form and contact options */
+    @keyframes slideInLeft {
+        from {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Animation for form inputs */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Animation for submit button */
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* Additional styling */
+    .contact-form {
+        animation: slideInLeft 1s ease forwards;
+    }
+
+    .form-outline {
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    .submit-btn {
+        animation: pulse 1s infinite;
+    }
+
+    /* Pop effect for input columns */
+    .form-outline:hover .form-control {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+    }
+
+    /* Animation for Direct Call section */
+    .direct-call {
+        animation: fadeInUp 1s ease forwards;
+    }
+
+    /* Fill the space to the right */
+    .additional-content {
+        padding: 20px;
+        background-color: #fff; /* Choose appropriate background color */
+        border-radius: 10px;
+    }
+
+</style>
+
+<main style="min-height: 100vh;background-image: linear-gradient(to right, rgb(234, 196, 238) , rgb(197, 233, 229));">
+    <div class="container">
+        <div class="row" style="padding-top: 5%;">
+            <div class="col-md-5 border-right border-success contact-form">
+                <h1>Contact Us</h1>
+                <form>
+                    <div class="form-outline mt-5 mb-4">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Subject</label>
+                        <input type="text" class="form-control" />
+                    </div>
+                    <div class="form-outline mb-4">
+                        <label class="form-label">Question</label>
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info btn-block mt-4 mb-4 submit-btn">
+                        Submit
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-1">
+                <span hidden>h</span>
+            </div>
+            <div class="col-md-3 direct-call">
+                <h3 class="mt-5"><img src="https://odoocdn.com/helpdesk/static/src/img/tickets.svg" /> Direct contact</h3>
+                <hr>
+                <div class="mt-5 mb-3"> <a href="">Need help?</a></div>
+                <div class=" mb-3"><a href="">Contact Us?</a></div>
+                <div class="mb-3"><a href="">Chat with us?</a></div>
+                <div class=" mb-3"><a href="">Call us?</a></div>
+                <div class=" mb-3"><a href="">Schedule a video conference?</div>
+            </div>
+            
+        </div>
+    </div>
+</main>
+
+{% endblock %}

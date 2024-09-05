@@ -1,0 +1,96 @@
+{% extends 'candnav.html' %}
+{% block content %}
+{% load static %}
+<!-- Add these in the <head> section of your base template or above the `</body>` tag -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+    <div class="container mt-5" style="min-height: 100vh;padding-top: 5%;">
+        <h1 class="text-center mb-5">Manage My Applications</h1>
+        <div class="row">
+            {% if applications %}
+                {% for application in applications %}
+                    <div class="col-md-4 mb-5">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">{{ application.jobname.jobname }}</h3>
+                                <p><strong>Company:</strong> {{ application.hire.comp_name }}</p>
+                               
+                                <p><strong>Date Applied:</strong> {{ application.applied_at|date:"M d, Y" }}</p>
+                                <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#application-details-{{ application.id }}">View Details</a>
+                                {% if application.status == 'selected' %}
+                                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#statusModal-{{ application.id }}">Selected</button>
+                                {% elif application.status == 'rejected' %}
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#statusModal-{{ application.id }}">Rejected</button>
+                                {% else %}
+                                <button class="btn btn-danger" onclick="return confirm('Are you sure you want to withdraw this application?')">
+                                    <a href="{% url 'withdraw_application' application.id %}" style="color: white; text-decoration: none;">
+                                        Withdraw Application
+                                    </a>
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Modal for viewing more details -->
+                    <div class="modal fade" id="application-details-{{ application.id }}" tabindex="-1" aria-labelledby="applicationDetailsLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="applicationDetailsLabel">{{ application.jobname.jobname }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Company:</strong> {{ application.hire.comp_name }}</p>
+                                    <p><strong>Location:</strong> {{ application.hire.location }}</p>
+                                    <p><strong>About the Job:</strong></p>
+                                    <p>{{ application.jobname.about_job }}</p>
+                                    <p><strong>Posted on:</strong> {{ application.jobname.posted_at|date:"M d, Y" }}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="statusModal-{{ application.id }}" tabindex="-1" aria-labelledby="statusModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="statusModalLabel">{{ application.jobname.jobname }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    {% if application.status == 'selected' %}
+                                        <p>Congratulations! Your profile has been shortlisted. Company HR will contact you shortly</p>
+                                    {% else %}
+                                        <p>Sorry, you have not been selected for the job.</p>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md-12 text-center">
+                    <p>No applications yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+    <script>
+      {% for msg in messages %}
+      swal({
+      title: "{{msg}}",
+      text: "{{msg.tags}}",
+      icon: "{{msg.tags}}",
+    });
+      {% endfor %}
+     </script>
+{% endblock %}

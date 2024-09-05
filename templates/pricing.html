@@ -1,0 +1,185 @@
+{% extends 'careernav.html' %}
+{% block content %}
+{% load static %}
+<style>
+  .subscription-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .subscription-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .subscription-cards-row {
+    animation: fadeInUp 1s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reasons {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .reasons:hover {
+    transform: scale(1.05);
+  }
+
+  @keyframes fadeInUpReasons {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .reasons h3 {
+    font-family: Arial, sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .reasons p {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #666;
+  }
+
+  .reasons ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+  }
+
+  .reasons ul li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    color: #666;
+  }
+
+  .reasons ul li:before {
+    content: '\2022';
+    position: absolute;
+    left: 0;
+    color: #007bff;
+  }
+</style>
+<main>
+    
+  <div class="container py-5">
+    <h2 class="text-center mb-4">Choose Your Subscription Plan</h2>
+    <div class="row mt-3 subscription-cards-row">
+              
+        <div class="col-sm-2 mb-3">
+            <div  hidden >
+            
+              
+            </div>
+          </div>
+          <div class="col-sm-4 mb-3">
+              <div class="card subscription-card"  style="border-top: 5px solid yellow;"  >
+              
+                <div class="card-body">
+                  <h1 class="card-title text-info">STANDARD</h1>
+                  <hr style="border-color: green;  margin: 0 auto 0 0;">
+                  <p class="card-text ">Rs<b style="font-size: 5rem;" class="text-primary">0/</b>month</p>
+                  
+                  <div class="desription mb-5">
+                   
+                    <p class="card-text">Limited number of job applications per month (e.g., 10 applications).</p>
+                    <p class="card-text">Basic profile visibility to employers.</p>
+                    <p class="card-text">Limited or no access to direct messaging with employers..</p>
+                  </div>
+                  
+                  <button type="submit" class="btn btn-info btn-block mt-5 mb-4 " ><a href="" style="color: white;text-decoration: none;">Use</a></button>
+                </div>
+              </div>
+            </div>
+      
+            <div class="col-sm-4 mb-3">
+              <div class="card subscription-card" style="border-top: 5px solid green;">
+              
+                <div class="card-body">
+                  <h1 class="card-title text-info">PREMIUM</h1>
+                  <hr style="border-color: green;  margin: 0 auto 0 0;">
+                  <p class="card-text ">Rs<b style="font-size: 5rem;" class="text-primary">500/</b>month</p>
+                  
+                  <div class="desription mb-2">
+                   
+                    <p class="card-text">Unlimited job applications.</p>
+                    <p class="card-text"> Enhanced profile visibility with a featured profile that appears at the top of employer searches..</p>
+                    <p class="card-text">Ability to send direct messages to recruiters and hiring managers.
+                    </p>
+                    
+                  </div>
+                  
+                  <button type="submit" class="btn btn-info btn-block mt-4 mb-4" ><a href="" style="color: white;text-decoration: none;">Buy</a></button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 mb-3">
+                <div  hidden >
+                
+                 
+                </div>
+              </div>
+           </div>
+    <div class="row mt-5">
+        <div class="col-md-8 offset-md-2">
+          <div class="reasons" id="reasons">
+            <h3 class="text-center">Why Choose Us?</h3>
+            <p class="text-center mt-3">Here are some reasons why our subscription service is the right choice for you:</p>
+            <ul class="mt-3">
+              <li>Unlimited access to premium content</li>
+              <li>Personalized customer support</li>
+              <li>Exclusive discounts and offers</li>
+              <li>Regular updates and new features</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+</main>
+<script>
+  // JavaScript to trigger the animation when the section comes into view
+  const reasons = document.getElementById('reasons');
+  const options = {
+    threshold: 0.5 // Trigger when 50% of the element is visible
+  };
+  
+  const observer = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+      }
+    });
+  }, options);
+  
+  observer.observe(reasons);
+</script>
+
+    
+    
+    {% endblock %}

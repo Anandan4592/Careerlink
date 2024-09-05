@@ -1,0 +1,101 @@
+{% extends 'recruiternav.html' %}
+{% block content %}
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+<!-- jQuery and Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-5 mb-5" style="min-height: 100vh;padding-top: 6%;">
+    <h1 class="mb-5">Applications for {{ job.jobname }}</h1>
+    <div class="row">
+        {% if applications %}
+            {% for application in applications %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Display full name -->
+                            <h5 class="card-title text-uppercase">{{ application.seeker.user.first_name }} {{ application.seeker.user.last_name }}</h5>
+                            <p>Applied Date :{{application.applied_at|date:"M d, Y"}} </p>
+                            <!-- Button to trigger modal -->
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#detailsModal" 
+                                    data-about="{{ application.seeker.about }}" 
+                                    data-address="{{ application.seeker.address }}" 
+                                    data-resume="{{ application.seeker.resume.url }}"
+                                    data-image="{{ application.seeker.image.url }}">
+                                See More Details
+                            </button><br>
+                            {% if application.status == 'selected' %}
+                            <button class="btn btn-success mt-2" disabled >Selected </button>
+                            {% elif application.status == 'rejected' %}
+                            <button class="btn btn-danger mt-2" disabled >Rejected </button>
+                            {% else %}
+                            <button class="btn btn-success mt-2" ><a href="{% url 'select' application.id %}" onclick="return confirm('Confirm your selection?')" style="color: white; text-decoration: none;">Select</a> </button>
+                            <button class="btn btn-danger mt-2"><a href="{% url 'reject' application.id %}" onclick="return confirm('Are you sure you want to reject?')" style="color: white; text-decoration: none;">Reject</a> </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12">
+                <p>No applications found for this job.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Modal structure -->
+<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Candidate Details </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-3">
+            <img id="modalImage" src="" alt="Jobseeker Picture" class="img-thumbnail" style="width: 150px; height: 150px; object-fit: cover;">
+          </div>
+        <p><strong>About:</strong> <span id="modalAbout"></span></p>
+        <p><strong>Address:</strong> <span id="modalAddress"></span></p>
+        <p><strong>Resume:</strong> <a id="modalResume" href="#" target="_blank">Download</a></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // When the modal is about to be shown
+    $('#detailsModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        
+        // Extract info from data-* attributes
+        var about = button.data('about');
+        var address = button.data('address');
+        var resume = button.data('resume');
+        var image = button.data('image');
+        // Update the modal's content
+        var modal = $(this);
+        modal.find('#modalAbout').text(about);
+        modal.find('#modalAddress').text(address);
+        modal.find('#modalResume').attr('href', resume);
+        modal.find('#modalImage').attr('src', image);
+    });
+</script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+<script>
+    {% for msg in messages %}
+    swal({
+    title: "{{msg}}",
+    text: "{{msg.tags}}",
+    icon: "{{msg.tags}}",
+  });
+    {% endfor %}
+   </script>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'candnav.html' %}
+{% block content %}
+{% load static %}
+<!-- Add these in the <head> section of your base template or above the `</body>` tag -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+<style>
+    /* Add some padding to the profile section */
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    opacity: 0;
+    animation: fadeInUp 1s ease-in-out forwards;
+}
+
+/* Animation keyframes */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Round profile picture */
+.img-fluid {
+    border-radius: 10%;
+}
+
+/* Add spacing between sections */
+.card-body {
+    padding: 20px;
+}
+
+</style>
+<div class="container mt-5 mb-5" style="padding-top: 4%;min-height: 100vh;">
+    <div class="row">
+        {% if profile %}
+        <!-- Profile Picture and Personal Info -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body text-center">
+                    <img src="{{ profile.image.url }}" class="img-fluid mb-3" alt="Profile Picture" style="width: 150px; height: 150px;object-fit: contain;">
+                    <h4 class="card-title text-uppercase">{{ profile.user.first_name }} {{ profile.user.last_name }}</h4>
+                    <p class="card-text">{{ profile.user.email }}</p>
+                    <p class="card-text"><strong>Address:</strong> {{ profile.address }}</p>
+                    <a href="{{ profile.resume.url }}" class="btn btn-primary mt-3">Download Resume</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- About Section and Resume -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">About Me</h5>
+                    <p class="card-text">{{ profile.about }}</p>
+
+                    <hr>
+
+                    <h5 class="card-title">Contact Information</h5>
+                    <p class="card-text"><strong>Email:</strong> {{ profile.user.email }}</p>
+                    <p class="card-text"><strong>Username:</strong> {{ profile.user.username }}</p>
+
+                    <hr>
+
+                    <h5 class="card-title">Edit</h5>
+                    <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Update your Account</a>
+
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="alert alert-warning" role="alert">
+                Profile not found. Please complete your profile information.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Update Profile Modal -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateProfileModalLabel">Update Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="updateProfileForm" method="POST" action="{% url 'update_profile' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="firstName" class="form-label">First Name</label>
+              <input type="text" class="form-control" id="firstName" name="first_name" value="{{ profile.user.first_name }}">
+            </div>
+            <div class="mb-3">
+              <label for="lastName" class="form-label">Last Name</label>
+              <input type="text" class="form-control" id="lastName" name="last_name" value="{{ profile.user.last_name }}">
+            </div>
+            <div class="mb-3">
+              <label for="address" class="form-label">Address</label>
+              <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
+            </div>
+            <div class="mb-3">
+              <label for="about" class="form-label">About</label>
+              <textarea class="form-control" id="about" name="about" rows="3">{{ profile.about }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Update Profile Image </label>
+                <input type="file" class="form-control" id="image" name="image">
+            </div>
+            <div class="mb-3">
+                
+                <label for="cv" class="form-label">Update Resume</label>
+                <input type="file" class="form-control" id="cv" name="cv">
+            </div>
+
+            <div class="mb-3">
+              <label for="oldPassword" class="form-label">Old Password</label>
+              <input type="password" class="form-control" id="oldPassword" name="old_password">
+            </div>
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" class="form-control" id="newPassword" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}" title="Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character" name="new_password">
+            </div>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+  <script>
+    {% for msg in messages %}
+    swal({
+    title: "{{msg}}",
+    text: "{{msg.tags}}",
+    icon: "{{msg.tags}}",
+  });
+    {% endfor %}
+   </script>
+    
+{% endblock %}

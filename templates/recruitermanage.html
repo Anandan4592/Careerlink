@@ -1,0 +1,90 @@
+{% extends 'recruiternav.html' %}
+{% block content %}
+{% load static %}
+<style>
+    /* Fade-in animation */
+    .animate-fade-in {
+        opacity: 0;
+        animation: fadeIn 1s forwards;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Slide-in animation */
+    .animate-slide-in {
+        opacity: 0;
+        transform: translateX(-50px);
+        animation: slideIn 1s forwards;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(-50px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+    .section-with-shadow {
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2); /* You can adjust the shadow values as needed */
+    padding: 20px; /* Add padding if necessary to prevent shadow clipping */
+}
+</style>
+<section class="mb-5 ">
+    <div class="container-fluid" style="background-image: linear-gradient(to right, rgb(21, 147, 220) , rgb(169, 232, 227));text-align: center;">
+        <h1 class="text-white animate-slide-in " style="padding-top: 6%;font-size: calc(2.5vw + 1rem);">Manage Job Postings</h1>
+    </div>
+</section>
+
+<div class="container" >
+    {% if not posting %}
+        <div class="text-center mt-5">
+            <img class="card-img" src="{% static 'images/emptyyy.jpg' %}" alt="No jobs posted" >
+            <h3>No Jobs Posted Yet</h3>
+            <p>It looks like you haven’t posted any job openings. Check back later or try posting a new job!</p>
+        </div>
+    {% else %}
+        <div class="row mt-3 mb-5" style="padding-bottom: 10%;" id="card-container">
+            {% for post in posting %}
+                <div class="col-sm-4 mb-3">
+                    <div class="card animate-fade-in" style="border-top: 5px solid red; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+                        <div class="card-body section-with-shadow">
+                            <h3 class="card-title text-info">{{ post.jobname }}</h3>
+                            <hr class="mb-3" style="border-color: green; margin: 0 auto 0 0;">
+                            <p class="card-text"><b>Qualification: {{ post.qualification }}</b></p>
+                            <p class="card-text"><b>Experience: {{ post.experience }}</b></p>
+                            <p class="card-text"><b>Date posted: {{ post.posted_at|date:"M d, Y" }}</b></p>
+
+                            {% if not post.cancel %}
+                                <button class="btn btn-info btn-block mt-4 mb-4" style="box-shadow: 0 4px 8px rgba(0,0,0,0.5)">
+                                    <a href="{% url 'deletejob' post.id %}" onclick="return confirm('Are you sure you want to delete this job post?')" style="color: white; text-decoration: none;">
+                                        Delete
+                                    </a>
+                                </button>
+                            {% else %}
+                                <button class="btn btn-secondary btn-block mt-4 mb-4" style="box-shadow: 0 4px 8px rgba(0,0,0,0.5)" disabled>
+                                    Post Deleted
+                                </button>
+                            {% endif %}
+                            
+                            <button class="btn btn-info btn-block mt-4 mb-4" style="box-shadow: 0 4px 8px rgba(0,0,0,0.5)">
+                                <a href="{% url 'view_applications' post.id %}" style="color: white; text-decoration: none;">Applications ({{ post.app_count }})</a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
