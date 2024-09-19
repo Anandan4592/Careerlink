@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <form class="d-flex" method="GET" action="{% url 'candhome' %}">
-                        <input class="form-control me-2" type="search" name="search" placeholder="Search job offers" aria-label="Search" value="{{ request.GET.search }}">
+                        <input class="form-control me-2" type="search" name="search" placeholder="Search job offers by name, location and experience" aria-label="Search" value="{{ request.GET.search }}">
                         <button class="btn btn-primary" type="submit">Search</button>
                     </form>
                     

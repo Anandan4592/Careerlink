@@ -51,7 +51,7 @@ def hiring(request):
                     # Check if an image was uploaded
                 if image==None:
                         # Set default image path using the static function
-                    image = static('images/userr.jpg')
+                    image = 'Image/userr.jpg'
                     x = Recruiter(comp_name=cname, image=image, about=about, user=user,location=location)
                     x.save()
                 else:    
@@ -94,7 +94,7 @@ def jobseeker(request):
                     # Check if an image was uploaded
                 if image==None:
                         # Set default image path using the static function
-                    image = static('images/userr.jpg')
+                    image = 'Image/userr.jpg'
                     x = Jobseeker(resume=resume, image=image, about=about, user=user,address=address)
                     x.save()
                 else:    
@@ -156,7 +156,7 @@ def candnav(request):
 @login_required(login_url='careerhome')  
 def candhome(request):
     currentuser=request.user
-    job=Job.objects.all()
+    
     applied_jobs = Applications.objects.filter(user=currentuser).values_list('jobname_id', flat=True)
 
     query = request.GET.get('search')
@@ -164,10 +164,11 @@ def candhome(request):
         job = Job.objects.filter(
             Q(jobname__icontains=query) |
             Q(hire__comp_name__icontains=query) |
-            Q(hire__location__icontains=query)
-        )
+            Q(hire__location__icontains=query) |
+            Q(experience__icontains=query)
+        ).order_by('-posted_at')
     else:
-        job = Job.objects.all()
+        job = Job.objects.all().order_by('-posted_at')
     return render(request,'candhome.html',{'currentuser':currentuser,'job':job,'applied_jobs':applied_jobs})
 
 @login_required(login_url='careerhome')  
